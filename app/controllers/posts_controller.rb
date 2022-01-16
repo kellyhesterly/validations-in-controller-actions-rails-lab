@@ -1,6 +1,4 @@
 class PostsController < ApplicationController
-  before_action :set_post!, only: [:show, :edit, :update]
-
   def show
     @post = Post.find(params[:id])
   end
@@ -11,8 +9,9 @@ class PostsController < ApplicationController
 
   def update
     @post = Post.find(params[:id])
+    @post.update(post_params)
 
-    if @post.update(post_params)
+    if @post.valid?
       redirect_to post_path(@post)
     else
       render :edit
@@ -22,10 +21,6 @@ class PostsController < ApplicationController
   private
 
   def post_params
-    params.permit(:category, :content, :title)
-  end
-
-  def set_post!
-    @post = Post.find(params[:id])
+    params.permit(:title, :category, :content)
   end
 end
